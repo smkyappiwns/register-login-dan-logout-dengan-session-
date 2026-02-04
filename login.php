@@ -1,4 +1,3 @@
-
 <?php
 //menyertakan file program koneksi.php pada register
 require('koneksi.php');
