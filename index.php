@@ -1,4 +1,4 @@
-
+ister-Login
 <?php
 //inisialisasi session
 session_start();
@@ -25,7 +25,7 @@ if( !isset($_SESSION['username']) ){
 <body>
 <nav class='navbar navbar-expand-lg navbar-dark bg-dark text-light '>
     <div class="container">
-        <a href="index.php" class="navbar-brand">KODEKREASI</a>
+        <a href="index.php" class="navbar-brand">Login-Register</a>
         <button class="navbar-toggler" type="button" data-togle="collapse">
             <span class="navbar-toggler-icon"></span>
         </button>
