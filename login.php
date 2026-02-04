@@ -11,45 +11,48 @@ $validate = '';
 //mengecek apakah sesssion username tersedia atau tidak jika tersedia maka akan diredirect ke halaman index
 if( isset($_SESSION['username']) ) header('Location: index.php');
 
-//mengecek apakah form disubmit atau tidak
-if( isset($_POST['submit']) ){
-        
-        // menghilangkan backshlases
-        $username = stripslashes($_POST['username']);
-        //cara sederhana mengamankan dari sql injection
-        $username = mysqli_real_escape_string($con, $username);
-         // menghilangkan backshlases
-        $password = stripslashes($_POST['password']);
-         //cara sederhana mengamankan dari sql injection
-        $password = mysqli_real_escape_string($con, $password);
-       
-        //cek apakah nilai yang diinputkan pada form ada yang kosong atau tidak
-        if(!empty(trim($username)) && !empty(trim($password))){
+// mengecek apakah form disubmit atau tidak
+if (isset($_POST['submit'])) {
 
-            //select data berdasarkan username dari database
-            $query      = "SELECT * FROM users WHERE username = '$username'";
-            $result     = mysqli_query($con, $query);
-            $rows       = mysqli_num_rows($result);
+    // mengambil dan membersihkan input
+    $username = stripslashes($_POST['username']);
+    $username = mysqli_real_escape_string($con, $username);
 
-            if ($rows != 0) {
-                $hash   = mysqli_fetch_assoc($result)['password'];
-                if(password_verify($password, $hash)){
-                    $_SESSION['username'] = $username;
-               
-                    header('Location: index.php');
-                }
-                            
-            //jika gagal maka akan menampilkan pesan error
+    $password = stripslashes($_POST['password']);
+    $password = mysqli_real_escape_string($con, $password);
+
+    // cek apakah input kosong
+    if (!empty(trim($username)) && !empty(trim($password))) {
+
+        // ambil data user berdasarkan username
+        $query  = "SELECT * FROM users WHERE username = '$username'";
+        $result = mysqli_query($con, $query);
+
+        if (mysqli_num_rows($result) > 0) {
+
+            $data = mysqli_fetch_assoc($result);
+
+            // membandingkan password langsung (plaintext)
+            if ($password == $data['password']) {
+
+                $_SESSION['username'] = $username;
+                header('Location: index.php');
+                exit;
+
             } else {
-                $error =  'Register User Gagal !!';
+                $error = 'Password salah !!';
             }
-            
-        }else {
-            $error =  'Data tidak boleh kosong !!';
-        }
-    } 
 
+        } else {
+            $error = 'Username tidak ditemukan !!';
+        }
+
+    } else {
+        $error = 'Data tidak boleh kosong !!';
+    }
+}
 ?>
+
 
 
 <!DOCTYPE html>
